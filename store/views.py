@@ -1,10 +1,66 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Product, Order, OrderItem, ShippingAddress, Customer
 from .utils import cookieCart, cartData, guestOrder
-
+from .forms import CustomUserCreationForm
+from django.contrib.auth import login
+from django.contrib import messages
 from django.http import JsonResponse
+from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import logout
+
 import json
 import datetime
+from .forms import LoginForm
+
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        
+        if form.is_valid():
+            user = form.save()
+            login(request, user)            
+            return redirect('store')
+        else:
+            print(form.errors)
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = CustomUserCreationForm()
+    
+    data = cartData(request)
+    cartItems = data['cartItems']
+    return render(request, 'register.html', {'form': form, 'cartItems': cartItems})
+
+def login_view(request):
+    """Handle user login."""
+    form = LoginForm(request.POST or None)  # Instantiate the login form
+    context = {}
+
+    # Get cart data
+    data = cartData(request)
+    cartItems = data['cartItems']
+    context['form'] = form
+    context['cartItems'] = cartItems  # Pass cart items to the template
+
+    if request.method == 'POST' and form.is_valid():
+        username = form.cleaned_data['username']  # Get username from form
+        password = form.cleaned_data['password']  # Get password from form
+        
+        # Authenticate the user
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            auth_login(request, user)  # Log the user in
+            return redirect('store')  # Redirect to store or desired page
+        else:
+            # Show a message for invalid credentials
+            messages.error(request, 'Invalid username or password.')
+
+    return render(request, 'login.html', context)
+
+def logout_view(request):
+    logout(request)
+    return redirect('login') 
 
 def store(request):
     data = cartData(request)

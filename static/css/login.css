@@ -1,0 +1,65 @@
+.login-container {
+  background: #f8f9fa; /* Soft light background */
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  max-width: 450px; /* Limiting the width */
+}
+
+.login-container h2 {
+  font-weight: 600;
+  font-size: 2rem;
+  color: #343a40; /* Dark color for header */
+}
+
+.login-container label {
+  font-weight: 500;
+  color: #495057; /* Subtle text color for labels */
+}
+
+.login-container .form-control {
+  border-radius: 5px;
+  border: 1px solid #ced4da; /* Light border for inputs */
+  padding: 0.75rem; /* Larger input fields */
+  font-size: 1rem;
+}
+
+.login-container .btn-primary {
+  background: #007bff;
+  border: none;
+  font-size: 1.1rem;
+  padding: 0.75rem;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+  border-radius: 5px;
+}
+
+.login-container .btn-primary:hover {
+  background-color: #0056b3; /* Darker on hover */
+}
+
+.login-container a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-container a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.text-danger {
+  font-size: 0.875rem; /* Smaller font for error messages */
+  margin-top: 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 1.5rem;
+  }
+
+  .login-container h2 {
+    font-size: 1.75rem;
+  }
+}

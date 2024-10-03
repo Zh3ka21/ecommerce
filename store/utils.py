@@ -4,15 +4,26 @@ from .models import *
 
 def cartData(request):
     if request.user.is_authenticated:
-        customer = request.user.customer
+        try:
+            customer = request.user.customer
+        except Customer.DoesNotExist:
+            customer = Customer.objects.create(
+                user=request.user, 
+                name=request.user.first_name,
+                email=request.user.email
+            )
+
+        # Fetch or create order related to the customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items 
     else:
+        # Handle unauthenticated users by using cookie data
         cookieData = cookieCart(request)
         cartItems = cookieData['cartItems']
         order = cookieData['order']
         items = cookieData['items']
+
     return {'items': items, 'order': order, 'cartItems': cartItems}
 
 def cookieCart(request):
@@ -57,7 +68,6 @@ def cookieCart(request):
             pass
     
     return {'items': items, 'order': order, 'cartItems': cartItems}
-
 
 def guestOrder(request, data):
     print('User is not logged in..')
