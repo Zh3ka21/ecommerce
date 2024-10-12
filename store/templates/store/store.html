@@ -2,13 +2,15 @@
 <div class="row">
   {% for product in products %}
   <div class="col-lg-4 col">
-    <img class="thumbnail" src="{{ product.imageURL }}" />
+    <a href="/product/{{ product.id }}/">
+      <img
+        class="thumbnail"
+        src="{{ product.imageURL }}"
+        alt="{{ product.name }}"
+      />
+    </a>
     <div class="box-element product">
       <h6><strong>{{ product.name }}</strong></h6>
-      {% comment %}
-      <h6><strong>{{ product.id }}</strong></h6>
-      {% endcomment %}
-
       <hr />
       <button
         data-product="{{ product.id }}"
@@ -17,7 +19,9 @@
       >
         Add to cart
       </button>
-      <a class="btn btn-outline-success" href="#">View</a>
+      <a class="btn btn-outline-success" href="/product/{{ product.id }}/"
+        >View</a
+      >
       <h4 style="display: inline-block; float: right">
         ${{ product.price|floatformat:2 }}
       </h4>

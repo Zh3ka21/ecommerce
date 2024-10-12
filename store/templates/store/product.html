@@ -1,0 +1,84 @@
+{% extends 'store/main.html' %} {% load static %} {% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <!-- Product Image -->
+    <div class="col-md-6">
+      <div class="product-image">
+        <img
+          src="{{ product.imageURL }}"
+          alt="{{ product.name }}"
+          class="img-fluid rounded"
+        />
+      </div>
+    </div>
+    <!-- Product Info -->
+    <div class="col-md-6">
+      <h1 class="font-weight-bold">{{ product.name }}</h1>
+      <h2 class="text-danger">{{ product.price }} ₴</h2>
+
+      <!-- Availability -->
+      <div class="d-flex align-items-center">
+        {% if product.availability %}
+        <span class="badge badge-success" style="color: green">In Stock</span>
+        {% else %}
+        <span class="badge badge-danger" style="color: red">Out of Stock</span>
+        {% endif %}
+      </div>
+
+      <p class="mt-2">
+        <strong>Guarantee:</strong> {{ product.guarantee }} months
+      </p>
+
+      <!-- Star Rating using the product's rating field -->
+      <p>
+        <strong>Rating:</strong>
+        <span class="text-warning">
+          <!-- Display filled stars based on the integer value of product.rating -->
+          {% for i in "12345" %} {% if forloop.counter <= product.rating %}
+          <i class="fas fa-star"></i>
+          <!-- Filled star -->
+          {% else %}
+          <i class="far fa-star"></i>
+          <!-- Empty star -->
+          {% endif %} {% endfor %}
+        </span>
+      </p>
+
+      <!-- Description -->
+      <p><strong>Description:</strong></p>
+      <p>{{ product.description }}</p>
+
+      <!-- Buttons -->
+      <button
+        class="btn btn-primary btn-lg mt-3"
+        data-product="{{ product.id }}"
+      >
+        Buy Now
+      </button>
+      <button
+        class="btn btn-outline-secondary btn-lg mt-3"
+        data-product="{{ product.id }}"
+      >
+        Add to Cart
+      </button>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <h5>Delivery Options:</h5>
+      <ul>
+        <li>Self-pickup from {Name} store</li>
+        <li>Courier delivery available</li>
+        <li>Delivery from postal operators</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Include Font Awesome -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+/>
+{% endblock content %}

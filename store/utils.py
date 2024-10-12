@@ -30,7 +30,6 @@ def cookieCart(request):
     # Get the cookie value and decode it
     cart_cookie = request.COOKIES.get('cart', '{}')
     decoded_cart = unquote(cart_cookie)  # Decode the URL-encoded string
-    print(decoded_cart)
     
     try:
         cart = json.loads(decoded_cart)  # Now load the JSON

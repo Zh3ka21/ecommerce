@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from .models import Product, Order, OrderItem, ShippingAddress, Customer
 from .utils import cookieCart, cartData, guestOrder
 from .forms import CustomUserCreationForm
@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 import json
 import datetime
@@ -29,7 +31,7 @@ def register(request):
     
     data = cartData(request)
     cartItems = data['cartItems']
-    return render(request, 'register.html', {'form': form, 'cartItems': cartItems})
+    return render(request, 'auth/register.html', {'form': form, 'cartItems': cartItems})
 
 def login_view(request):
     """Handle user login."""
@@ -56,7 +58,7 @@ def login_view(request):
             # Show a message for invalid credentials
             messages.error(request, 'Invalid username or password.')
 
-    return render(request, 'login.html', context)
+    return render(request, 'auth/login.html', context)
 
 def logout_view(request):
     logout(request)
@@ -69,6 +71,15 @@ def store(request):
     products = Product.objects.all()
     context = {'products': products, 'cartItems': cartItems}
     return render(request, 'store/store.html', context)
+
+def product_detail(request, product_id):
+    data = cartData(request)
+    cartItems = data['cartItems'] 
+    product = get_object_or_404(Product, id=product_id)
+    context = {'product': product, 'cartItems': cartItems}
+    
+    print(context)
+    return render(request, 'store/product.html', context)
 
 def cart(request):
     data = cartData(request)
@@ -128,11 +139,6 @@ def processOrder(request):
     total = float(data['form']['total'])
     order.transaction_id = transaction_id
 
-    print("AAAAAAAAA: ", total == order.get_cart_total, "cause total: ", total, "and ",  order.get_cart_total)
-    
-    print("Total:", total, "Type:", type(total))
-    print("Order Total:", order.get_cart_total, "Type:", type(order.get_cart_total))
-
     if total == float(order.get_cart_total):
         order.complete = True
     order.save()
@@ -148,3 +154,33 @@ def processOrder(request):
 	)
 
     return JsonResponse('Payment submitted..', safe=False)
+
+def search(request):
+    search_query = request.GET.get('q', '').strip()
+    
+    data = cartData(request)
+    cartItems = data['cartItems'] 
+
+    if search_query:
+        price_query = None
+        try:
+            price_query = float(search_query.replace(',', '.'))
+        except ValueError:
+            pass
+        
+        filters = Q(name__icontains=search_query)
+        if price_query is not None:
+            filters |= Q(price=price_query)
+
+        products = Product.objects.filter(filters).order_by('name')
+    else:
+        products = Product.objects.all().order_by('name')
+
+    paginator = Paginator(products, 10)
+    page_number = request.GET.get('page')
+    products_page = paginator.get_page(page_number)
+
+    context = {'products': products_page, 'cartItems': cartItems, 'search_query': search_query}
+
+    return render(request, 'store/store.html', context)
+
