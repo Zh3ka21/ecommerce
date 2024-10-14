@@ -157,7 +157,6 @@ def processOrder(request):
 
 def search(request):
     search_query = request.GET.get('q', '').strip()
-    
     data = cartData(request)
     cartItems = data['cartItems'] 
 
@@ -182,5 +181,39 @@ def search(request):
 
     context = {'products': products_page, 'cartItems': cartItems, 'search_query': search_query}
 
+    return render(request, 'store/store.html', context)
+
+def orderby(request):
+    data = cartData(request)
+    cartItems = data['cartItems'] 
+    
+    search_query = request.GET.get('q', '')
+    order_by = request.GET.get('order_by', 'price')
+    min_price = request.GET.get('min_price') 
+    max_price = request.GET.get('max_price')
+
+    products = Product.objects.all()
+
+    if search_query:
+        products = products.filter(
+            Q(name__icontains=search_query) | Q(description__icontains=search_query)
+        )
+
+    if min_price:
+        products = products.filter(price__gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
+
+    if order_by:
+        products = products.order_by(order_by)
+
+    context = {
+        'products': products,
+        'search_query': search_query,
+        'order_by': order_by,
+        'min_price': min_price,
+        'max_price': max_price,
+        'cartItems': cartItems,
+    }
     return render(request, 'store/store.html', context)
 
