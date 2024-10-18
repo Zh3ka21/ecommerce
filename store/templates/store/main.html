@@ -59,47 +59,6 @@
     </script>
 
     <title>Ecom</title>
-
-    <style>
-      #filter-panel {
-        width: 250px;
-        background-color: #f8f9fa;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        margin-top: 10px;
-        float: left;
-      }
-
-      .product-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-right: 20px;
-        margin-left: 30px;
-        padding-top: 5px;
-      }
-
-      .product-card {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: center;
-        transition: box-shadow 0.3s ease;
-      }
-
-      .product-card:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-
-      .product-image {
-        max-width: 100%;
-        height: auto;
-      }
-
-      main {
-        padding-top: 5px;
-        margin-left: 270px;
-      }
-    </style>
   </head>
 
   <body>
@@ -204,6 +163,7 @@
               placeholder="Min"
               min="0"
               id="min-price"
+              value="{{ request.GET.min_price|default:'' }}"
             />
             <input
               type="number"
@@ -212,12 +172,23 @@
               placeholder="Max"
               min="0"
               id="max-price"
+              value="{{ request.GET.max_price|default:'' }}"
             />
           </div>
+          <div
+            class="text-danger"
+            id="price-error-message"
+            style="display: none"
+          ></div>
         </div>
 
-        <button class="btn btn-primary w-100" type="submit">
-          Apply Filters
+        <!-- OK Button -->
+        <button
+          class="btn btn-primary w-100 mt-2"
+          type="button"
+          id="price-ok-btn"
+        >
+          OK
         </button>
       </form>
     </div>
@@ -234,44 +205,38 @@
     <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
 
     <script>
-      // Auto-submit sorting form when the dropdown value changes
       document
-        .getElementById("order-by-select")
-        .addEventListener("change", function () {
+        .getElementById("price-ok-btn")
+        .addEventListener("click", function () {
+          var minPrice = document.getElementById("min-price").value;
+          var maxPrice = document.getElementById("max-price").value;
+          var errorMessage = document.getElementById("price-error-message");
+
+          // Reset error message
+          errorMessage.style.display = "none";
+          errorMessage.textContent = "";
+
+          // Convert inputs to numbers (allow empty fields by defaulting to 0)
+          minPrice = minPrice ? parseFloat(minPrice) : 0;
+          maxPrice = maxPrice ? parseFloat(maxPrice) : Infinity;
+
+          // Validate: Min and Max price must not be negative
+          if (minPrice < 0 || maxPrice < 0) {
+            errorMessage.textContent = "Prices must be non-negative numbers.";
+            errorMessage.style.display = "block";
+            return;
+          }
+
+          // Validate: Min price should not be greater than Max price
+          if (minPrice > maxPrice) {
+            errorMessage.textContent =
+              "Minimum price cannot be greater than maximum price.";
+            errorMessage.style.display = "block";
+            return;
+          }
+
+          // If validation passes, submit the form
           document.getElementById("filter-form").submit();
-        });
-
-      // Auto-submit form when the minimum or maximum price changes
-      document
-        .getElementById("min-price")
-        .addEventListener("change", function () {
-          document.getElementById("filter-form").submit();
-        });
-
-      document
-        .getElementById("max-price")
-        .addEventListener("change", function () {
-          document.getElementById("filter-form").submit();
-        });
-
-      // Optional delayed submission after typing in price range fields
-      let timeout = null;
-      document
-        .getElementById("min-price")
-        .addEventListener("input", function () {
-          clearTimeout(timeout);
-          timeout = setTimeout(function () {
-            document.getElementById("filter-form").submit();
-          }, 1000); // 1 second delay after typing
-        });
-
-      document
-        .getElementById("max-price")
-        .addEventListener("input", function () {
-          clearTimeout(timeout);
-          timeout = setTimeout(function () {
-            document.getElementById("filter-form").submit();
-          }, 1000); // 1 second delay after typing
         });
     </script>
   </body>

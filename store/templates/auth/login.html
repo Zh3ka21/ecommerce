@@ -1,6 +1,10 @@
 {% extends 'store/main.html' %} {% load static %} {% block content %}
 <link rel="stylesheet" href="{% static 'css/login.css' %}" />
 
+{% block filter_panel %}
+<!-- Leave this block empty to hide the filter panel -->
+{% endblock %}
+
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-6">

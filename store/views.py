@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
+
+from store.db.service import OrderService
 from .models import Product, Order, OrderItem, ShippingAddress, Customer
 from .utils import cookieCart, cartData, guestOrder
 from .forms import CustomUserCreationForm
@@ -21,6 +23,7 @@ def register(request):
         
         if form.is_valid():
             user = form.save()
+            print(user)
             login(request, user)            
             return redirect('store')
         else:
@@ -101,30 +104,18 @@ def checkout(request):
     return render(request, 'store/checkout.html', context)
 
 def updateItem(request):
-	data = json.loads(request.body)
-	productId = data['productId']
-	action = data['action']
- 
-	print('Action:', action)
-	print('Product:', productId)
-
-	customer = request.user.customer
-	product = Product.objects.get(id=productId)
-	order, created = Order.objects.get_or_create(customer=customer, complete=False)
-
-	orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
-
-	if action == 'add':
-		orderItem.quantity = (orderItem.quantity + 1)
-	elif action == 'remove':
-		orderItem.quantity = (orderItem.quantity - 1)
-
-	orderItem.save()
-
-	if orderItem.quantity <= 0:
-		orderItem.delete()
-
-	return JsonResponse('Item was added', safe=False)
+    data = json.loads(request.data)
+    product_id = data['productId']
+    action = data['action']
+    
+    customer_id = request.user.customer_id  
+    
+    try:
+        order_service = OrderService()
+        result = order_service.update_item(customer_id, product_id, action)
+        return JsonResponse(result), 200
+    except Exception as e:
+        return JsonResponse({'error': str(e)}), 400
 
 def processOrder(request):
     transaction_id = datetime.datetime.now().timestamp()

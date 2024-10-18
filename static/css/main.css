@@ -111,3 +111,44 @@ h6 {
 .col {
   margin-top: 10px;
 }
+
+/* 000000000000000000000000000000000000000000000 */
+
+#filter-panel {
+  width: 250px;
+  background-color: #f8f9fa;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  margin-top: 10px;
+  float: left;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-right: 20px;
+  margin-left: 30px;
+  padding-top: 5px;
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.product-image {
+  max-width: 100%;
+  height: auto;
+}
+
+main {
+  padding-top: 5px;
+  margin-left: 270px;
+}
