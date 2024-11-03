@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('store', '0003_alter_product_price'),
+        ("store", "0003_alter_product_price"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='availability',
+            model_name="product",
+            name="availability",
             field=models.BooleanField(null=True),
         ),
         migrations.AddField(
-            model_name='product',
-            name='guarantee',
+            model_name="product",
+            name="guarantee",
             field=models.CharField(max_length=50, null=True),
         ),
         migrations.AddField(
-            model_name='product',
-            name='rating',
+            model_name="product",
+            name="rating",
             field=models.IntegerField(max_length=10, null=True),
         ),
         migrations.AlterField(
-            model_name='customer',
-            name='email',
+            model_name="customer",
+            name="email",
             field=models.CharField(max_length=200, unique=True),
         ),
     ]

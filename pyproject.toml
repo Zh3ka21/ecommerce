@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "ecommerce"
+version = "0.1.0"
+description = ""
+authors = ["Євгеній Пузанов <Yevhenii.Puzanov@cs.khpi.edu.ua>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^5.1.2"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+ruff = "^0.7.2"
+pre-commit = "^4.0.1"
+mypy = "^1.13.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["."]
+
+[tool.ruff.lint]
+select = ["F", "I", "W", "E", "N", "D", "S", "ANN", "ARG", "B", "C4", "E", "ERA", "ISC", "PD", "PIE", "PL", "PT", "RET", "SIM", "TCH", "UP", "W", "BLE", "FBT", "B", "A", "COM", "DTZ", "ICN", "G", "INP", "T20", "RSE", "SLF", "PTH", "TD", "PGH", "PERF", "FURB", "RUF"]
+ignore = []
+
+[tool.mypy]
+ignore_missing_imports = true
+warn_redundant_casts = true
+show_error_codes = true
+plugins = []
+
