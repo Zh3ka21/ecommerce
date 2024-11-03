@@ -154,6 +154,9 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+#vscode
+.vscode
+
 # Database stuff
 data_temp.json
 data.json
