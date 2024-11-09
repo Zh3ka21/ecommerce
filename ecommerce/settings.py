@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
+# https://stackoverflow.com/questions/76585758/mysqlclient-cannot-install-via-pip-cannot-find-pkg-config-name-in-ubuntu
+import pymysql
+
+pymysql.install_as_MySQLdb()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -85,7 +91,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "ecommerce",
-        "USER": "user",
+        "USER": "root",
         "PASSWORD": os.getenv("PASSWORD"),
         "HOST": "localhost",
         "PORT": "3306",

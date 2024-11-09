@@ -111,3 +111,11 @@ h6 {
 .col {
   margin-top: 10px;
 }
+
+.product-price {
+  font-size: 14px; /* Make font size smaller */
+  display: inline-block;
+  /* float: right; */
+  margin: 0;
+  color: #333; /* You can change the color if needed */
+}

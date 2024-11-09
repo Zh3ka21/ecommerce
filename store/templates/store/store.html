@@ -3,26 +3,16 @@
   {% for product in products %}
   <div class="col-lg-4 col">
     <a href="/product/{{ product.id }}/">
-      <img
-        class="thumbnail"
-        src="{{ product.imageURL }}"
-        alt="{{ product.name }}"
-      />
+      <img class="thumbnail" src="{{ product.imageURL }}" alt="{{ product.name }}" />
     </a>
     <div class="box-element product">
       <h6><strong>{{ product.name }}</strong></h6>
       <hr />
-      <button
-        data-product="{{ product.id }}"
-        data-action="add"
-        class="btn btn-outline-secondary add-btn update-cart"
-      >
+      <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">
         Add to cart
       </button>
-      <a class="btn btn-outline-success" href="/product/{{ product.id }}/"
-        >View</a
-      >
-      <h4 style="display: inline-block; float: right">
+      <a class="btn btn-outline-success" href="/product/{{ product.id }}/">View</a>
+      <h4 class="product-price">
         ${{ product.price|floatformat:2 }}
       </h4>
     </div>
