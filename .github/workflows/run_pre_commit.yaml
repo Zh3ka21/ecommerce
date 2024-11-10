@@ -1,0 +1,43 @@
+name: run pre_commit
+
+on:
+  push:
+    branches:
+      - "*"
+      - "*/*"
+      - "*/*/*"
+      - "!master"
+    tags-ignore:
+      - "*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up container
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y zip
+          sudo apt-get install -y python3-pip openssh-client git unixodbc-dev
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Install poetry
+        run: |
+          pip install poetry==1.7.1
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: pyproject.toml
+          cache: "poetry"
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Run pre-commit
+        run: |
+          poetry run pre-commit run --all-files
