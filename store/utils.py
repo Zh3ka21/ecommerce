@@ -1,7 +1,7 @@
 import json
 from urllib.parse import unquote
 
-from .models import *
+from .models import Customer, Order, OrderItem, Product
 
 
 def cartData(request):
