@@ -1,4 +1,9 @@
 {% extends 'store/main.html' %} {% load static %} {% block content %}
+
+{% block filter_panel %}
+<!-- Leave this block empty to hide the filter panel -->
+{% endblock %}
+
 <link rel="stylesheet" href="{% static 'css/login.css' %}" />
 
 <div class="container mt-5">

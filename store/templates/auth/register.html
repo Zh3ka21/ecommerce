@@ -1,4 +1,9 @@
 {% extends 'store/main.html' %} {% block content %}
+
+{% block filter_panel %}
+<!-- Leave this block empty to hide the filter panel -->
+{% endblock %}
+
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-6">
@@ -6,10 +11,7 @@
 
       <!-- Display success or error messages -->
       {% if messages %} {% for message in messages %}
-      <div
-        class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}"
-        role="alert"
-      >
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
         {{ message }}
       </div>
       {% endfor %} {% endif %}
@@ -19,54 +21,29 @@
 
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
-          <input
-            type="text"
-            name="username"
-            class="form-control"
-            id="username"
-            placeholder="Your Username"
-            value="{{ form.username.value|default:'' }}"
-          />
+          <input type="text" name="username" class="form-control" id="username" placeholder="Your Username"
+            value="{{ form.username.value|default:'' }}" />
           <div class="text-danger">{{ form.username.errors }}</div>
         </div>
 
         <div class="mb-3">
           <label for="id_email" class="form-label">Email</label>
-          <input
-            type="email"
-            name="email"
-            class="form-control"
-            id="id_email"
-            placeholder="Your email address"
-            value="{{ form.email.value|default:'' }}"
-            required
-          />
+          <input type="email" name="email" class="form-control" id="id_email" placeholder="Your email address"
+            value="{{ form.email.value|default:'' }}" required />
           <div class="text-danger">{{ form.email.errors }}</div>
         </div>
 
         <div class="mb-3">
           <label for="id_password1" class="form-label">Password</label>
-          <input
-            type="password"
-            name="password1"
-            class="form-control"
-            id="id_password1"
-            placeholder="At least 8 characters"
-            required
-          />
+          <input type="password" name="password1" class="form-control" id="id_password1"
+            placeholder="At least 8 characters" required />
           <div class="text-danger">{{ form.password1.errors }}</div>
         </div>
 
         <div class="mb-3">
           <label for="id_password2" class="form-label">Confirm Password</label>
-          <input
-            type="password"
-            name="password2"
-            class="form-control"
-            id="id_password2"
-            placeholder="Confirm your password"
-            required
-          />
+          <input type="password" name="password2" class="form-control" id="id_password2"
+            placeholder="Confirm your password" required />
           <div class="text-danger">{{ form.password2.errors }}</div>
         </div>
 

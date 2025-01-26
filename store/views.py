@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CustomUserCreationForm, LoginForm
+from .messaging import send_order_to_queue
 from .models import Order, OrderItem, Product, ShippingAddress
 from .utils import cartData, guestOrder
 
@@ -148,7 +149,7 @@ def processOrder(request):
         order.complete = True
     order.save()
 
-    if order.shipping == True:
+    if order.shipping:
         ShippingAddress.objects.create(
             customer=customer,
             order=order,
@@ -157,6 +158,24 @@ def processOrder(request):
             state=data["shipping"]["state"],
             zipcode=data["shipping"]["zipcode"],
         )
+
+    # Prepare order data
+    order_data = {
+        "order_id": order.id,
+        "username": customer.name,
+        "items": [
+            {
+                "product_name": item.product.name,
+                "quantity": item.quantity,
+                "price": float(item.product.price),
+            }
+            for item in order.orderitem_set.all()
+        ],
+        "total_amount": float(order.get_cart_total),
+    }
+
+    # Send order data to the 'order_queue'
+    send_order_to_queue(order_data)
 
     return JsonResponse("Payment submitted..", safe=False)
 

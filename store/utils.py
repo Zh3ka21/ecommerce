@@ -1,7 +1,9 @@
 import json
 from urllib.parse import unquote
 
-from .models import *
+import pika
+
+from .models import Customer, Order, OrderItem, Product
 
 
 def cartData(request):
@@ -97,3 +99,16 @@ def guestOrder(request, data):
             quantity=item["quantity"],
         )
     return customer, order
+
+
+def create_rabbitmq_connection():
+    """Create a connection to RabbitMQ and return the connection object."""
+    return pika.BlockingConnection(pika.ConnectionParameters("localhost"))
+
+
+def send_to_queue(queue_name, message):
+    """Publish a message to a RabbitMQ queue."""
+    with create_rabbitmq_connection() as connection:
+        channel = connection.channel()
+        channel.queue_declare(queue=queue_name, durable=True)
+        channel.basic_publish(exchange="", routing_key=queue_name, body=json.dumps(message))
