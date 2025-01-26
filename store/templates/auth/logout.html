@@ -1,18 +1,25 @@
 <!-- templates/logout.html -->
+{% block filter_panel %}
+<!-- Leave this block empty to hide the filter panel -->
+{% endblock %}
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Logged Out</title>
-    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
-  </head>
-  <body>
-    <div class="container">
-      <h2>Logged Out</h2>
-      <p>You have successfully logged out.</p>
-      <p><a href="{% url 'login' %}">Login again</a></p>
-      <p><a href="{% url 'home' %}">Go to Home</a></p>
-    </div>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logged Out</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+</head>
+
+<body>
+  <div class="container">
+    <h2>Logged Out</h2>
+    <p>You have successfully logged out.</p>
+    <p><a href="{% url 'login' %}">Login again</a></p>
+    <p><a href="{% url 'home' %}">Go to Home</a></p>
+  </div>
+</body>
+
 </html>
